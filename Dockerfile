@@ -19,12 +19,7 @@ RUN mkdir -p /tmp/terraform/ && \
     cd /usr/local/bin/ && \
     unzip /tmp/terraform/terraform_${TERRAFORM_VERSION}_linux_amd64.zip && \
     rm -rf /tmp/terraform/
+
 ENV TERRAFORM_STATE $MANTL_CONFIG_DIR/terraform.tfstate
 
-WORKDIR /mantl
-ENTRYPOINT ["/bin/sh", "-c"]
-CMD ["./docker_launch.sh"]
-# DOCS NEEDED:
-# copy over keys/certs if preexisting, otherwise generate ssh keys
-# copy over *.tf, mantl.yml, and security.yml if pre-existing
-# set env vars
+WORKDIR /local
