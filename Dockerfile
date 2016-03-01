@@ -9,6 +9,7 @@ RUN apk add --no-cache build-base git openssh openssl py-pip python python-dev u
 
 VOLUME /local
 ENV MANTL_CONFIG_DIR /local
+ENV SSH_KEY /root/.ssh/id_rsa
 
 ENV TERRAFORM_VERSION=0.6.12 TERRAFORM_STATE_ROOT=$MANTL_CONFIG_DIR
 RUN mkdir -p /tmp/terraform/ && \
