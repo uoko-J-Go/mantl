@@ -29,7 +29,7 @@ def link_terraform_files():
         if 'MANTL_PROVIDER' not in os.environ:
             print("mantl.readthedocs.org for provider")
             exit(1)
-        tf = 'terraform/{}.sample.yml'.format(os.environ['MANTL_PROVIDER'])
+        tf = 'terraform/{}.sample.tf'.format(os.environ['MANTL_PROVIDER'])
         symlink(tf, 'terraform.tf')
     else:
         for tf in files:
