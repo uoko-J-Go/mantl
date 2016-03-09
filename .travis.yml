@@ -1,5 +1,7 @@
 language: python
 env:
+  global:
+     - TF_VAR_build_number=${TRAVIS_JOB_NUMBER/./-}
   matrix:
      - TERRAFORM_FILE=testing/aws.tf ANSIBLE_PLAYBOOK=sample.yml
      - TERRAFORM_FILE=testing/do.tf  ANSIBLE_PLAYBOOK=sample.yml
