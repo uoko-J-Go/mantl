@@ -10,20 +10,7 @@ env:
 
 install: "pip install -r requirements.txt"
 
-before_script:
-  - if [ "$(git diff --name-only $TRAVIS_COMMIT_RANGE | grep -v -e '^docs/' -e 'md$' -e 'rst$')" == "" ]; then return 1; fi
-  - python2 testing/test-health-checks.py
-  - ssh-keygen -N '' -f ~/.ssh/id_rsa && eval $(ssh-agent) && ssh-add ~/.ssh/id_rsa
-  - ln -sf $ANSIBLE_PLAYBOOK mantl.yml
-  - ln -sf $TERRAFORM_FILE terraform.tf
-  - mkdir $HOME/bin && export PATH=$PATH:$HOME/bin
-  - export TERRAFORM_VERSION=0.6.8
-  # GCE doesn't like . in resource.name, so replace "." with "-"
-  - export TF_VAR_build_number=${TRAVIS_JOB_NUMBER/./-}
-  - curl -SL -o terraform.zip https://releases.hashicorp.com/terraform/${TERRAFORM_VERSION}/terraform_${TERRAFORM_VERSION}_linux_amd64.zip
-  - unzip -d $HOME/bin terraform.zip
-
-script: python2 testing/build-cluster.py
+script: testing/run-tests.sh
 
 # Just once doesn't always work
 after_script:
