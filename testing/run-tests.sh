@@ -6,7 +6,7 @@ set -ev
 
 ### filter out docfiles
 commit_range_minus_docfiles=$(git diff --name-only $TRAVIS_COMMIT_RANGE | grep -v -e '^docs/' -e 'md$' -e 'rst$')
-if $commit_range_minus_docfiles; then
+if [ -z "$commit_range_minus_docfiles" ]; then
 	echo "Skipping build that only has doc changes"
 	exit 0
 fi
