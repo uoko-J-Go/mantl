@@ -14,7 +14,7 @@ before_script:
 
 script: 
   - python2 testing/test-health-checks.py
-  - docker run -it -v testing:/local -v $(pwd):/mantl -e 'TF_VAR_build_number=${TRAVIS_JOB_NUMBER/./-}' -w='/mantl' ciscocloud/mantl "python2 testing/build-cluster.py"
+  - docker run -it -v testing:/local -v $(pwd):/mantl $DOCKER_SECRETS -e 'TF_VAR_build_number=${TRAVIS_JOB_NUMBER/./-}' -w='/mantl' ciscocloud/mantl "python2 testing/build-cluster.py"
 
 # Just once doesn't always work
 after_script:
