@@ -5,7 +5,8 @@ set -ev
 ## This script is control when testing should be triggered on CI systems
 
 ### filter out docfiles
-if $(git diff --name-only $TRAVIS_COMMIT_RANGE | grep -v -e '^docs/' -e 'md$' -e 'rst$'); then
+commit_range_minus_docfiles=$(git diff --name-only $TRAVIS_COMMIT_RANGE | grep -v -e '^docs/' -e 'md$' -e 'rst$')
+if $commit_range_minus_docfiles; then
 	echo "Skipping build that only has doc changes"
 	exit 0
 fi
