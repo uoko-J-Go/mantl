@@ -11,7 +11,7 @@ env:
 install: "pip install -r requirements.txt"
 
 before_script: 
-        - mv $TERRAFORM_FILE $TERRAFORM_FILE.tf
+        - mv $TERRAFORM_FILE terraform.tf
         - docker pull sehqlr/mantl:testing
         - docker run -i -a stdout -a stderr -v testing:/local -v $(pwd):/mantl $DOCKER_ENVS $DOCKER_IMAGE "python2 docker_setup.py"
 
