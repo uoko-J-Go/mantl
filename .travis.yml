@@ -9,12 +9,12 @@ install: "pip install -r requirements.txt"
 
 before_script: 
         - mv $TERRAFORM_FILE $TERRAFORM_FILE.tf
-        - docker pull ciscocloud/mantl
-        - docker run -it -v testing:/local -v $(pwd):/mantl ciscocloud/mantl "python2 docker_setup.py"
+        - docker pull sehqlr/mantl:testing
+        - docker run -it -v testing:/local -v $(pwd):/mantl sehqlr/mantl:testing "python2 docker_setup.py"
 
 script: 
   - python2 testing/test-health-checks.py
-  - docker run -it -v testing:/local -v $(pwd):/mantl $DOCKER_SECRETS -e 'TF_VAR_build_number=${TRAVIS_JOB_NUMBER/./-}' -w='/mantl' ciscocloud/mantl "python2 testing/build-cluster.py"
+  - docker run -it -v testing:/local -v $(pwd):/mantl $DOCKER_SECRETS -e 'TF_VAR_build_number=${TRAVIS_JOB_NUMBER/./-}' -w='/mantl' sehqlr/mantl:testing "python2 testing/build-cluster.py"
 
 # Just once doesn't always work
 after_script:
