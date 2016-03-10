@@ -1,7 +1,7 @@
 language: python
 env:
   global:
-     - DOCKER_ARGS='-i -a stdout -a stderr -v $(pwd)/testing:/local -v $(pwd):/mantl -e TF_VAR_build_number=${TRAVIS_JOB_NUMBER/./-}'
+     - DOCKER_ARGS='-i -a stdout -a stderr -v $($TRAVIS_BUILD_DIR)/testing:/local -v $($TRAVIS_BUILD_DIR):/mantl -e TF_VAR_build_number=${TRAVIS_JOB_NUMBER/./-}'
      - DOCKER_IMAGE=sehqlr/mantl:testing
   matrix:
      - TERRAFORM_FILE=testing/aws MANTL_PROVIDER=aws DOCKER_SECRETS='-e AWS_SECRET_ACCESS_KEY=$AWS_SECRET_ACCESS_KEY -e AWS_ACCESS_KEY_ID=$AWS_ACCESS_KEY_ID'
