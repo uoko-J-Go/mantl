@@ -1,8 +1,8 @@
 language: python
 env:
   global:
+     - DOCKER_ARGS='-i -a stdout -a stderr -v $(pwd)/testing:/local -v $(pwd):/mantl -e TF_VAR_build_number=${TRAVIS_JOB_NUMBER/./-}'
      - DOCKER_IMAGE=sehqlr/mantl:testing
-     - DOCKER_ENVS='-e SSH_KEY=id_rsa -e TF_VAR_build_number=${TRAVIS_JOB_NUMBER/./-} -e MANTL_PROVIDER=$MANTL_PROVIDER'
   matrix:
      - TERRAFORM_FILE=testing/aws MANTL_PROVIDER=aws DOCKER_SECRETS='-e AWS_SECRET_ACCESS_KEY=$AWS_SECRET_ACCESS_KEY -e AWS_ACCESS_KEY_ID=$AWS_ACCESS_KEY_ID'
      - TERRAFORM_FILE=testing/do MANTL_PROVIDER=do DOCKER_SECRETS='-e DIGITALOCEAN_TOKEN=$DIGITALOCEAN_TOKEN'
@@ -11,13 +11,13 @@ env:
 install: "pip install -r requirements.txt"
 
 before_script: 
-        - mv $TERRAFORM_FILE terraform.tf
+        - mv $TERRAFORM_FILE $TERRAFORM_FILE.tf
         - docker pull sehqlr/mantl:testing
-        - docker run -i -a stdout -a stderr -v testing:/local -v $(pwd):/mantl $DOCKER_ENVS $DOCKER_IMAGE "python2 docker_setup.py"
+        - docker run $DOCKER_ARGS $DOCKER_IMAGE "python2 docker_setup.py"
 
 script: 
   - python2 testing/test-health-checks.py
-  - docker run -i -a stdout -a stderr -v testing:/local -v $(pwd):/mantl $DOCKER_ENVS $DOCKER_SECRETS -w='/mantl' $DOCKER_IMAGE "python2 testing/build-cluster.py"
+  - docker run $DOCKER_ARGS $DOCKER_SECRETS $DOCKER_IMAGE "python2 testing/build-cluster.py"
 
 # Just once doesn't always work
 after_script:
