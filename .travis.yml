@@ -1,7 +1,7 @@
 language: python
 env:
   global:
-     - DOCKER_ARGS='-i -a stdout -a stderr -v testing:/local -v $(pwd):/mantl -e TF_VAR_build_number=${TRAVIS_JOB_NUMBER/./-} -w /mantl'
+     - DOCKER_ARGS='-i -a stdout -a stderr -v testing:/local -e TF_VAR_build_number=${TRAVIS_JOB_NUMBER/./-} -w /mantl'
      - DOCKER_IMAGE=sehqlr/mantl:testing
   matrix:
      - TERRAFORM_FILE=testing/aws MANTL_PROVIDER=aws DOCKER_SECRETS='-e AWS_SECRET_ACCESS_KEY=$AWS_SECRET_ACCESS_KEY -e AWS_ACCESS_KEY_ID=$AWS_ACCESS_KEY_ID'
@@ -14,12 +14,12 @@ before_script:
         - mv $TERRAFORM_FILE $TERRAFORM_FILE.tf
         - docker pull sehqlr/mantl:testing
         - ls
-        - docker run $DOCKER_ARGS $DOCKER_IMAGE "ls; pwd"
-        - docker run $DOCKER_ARGS $DOCKER_IMAGE "python2 docker_setup.py"
+        - docker run $DOCKER_ARGS -v $(pwd):/mantl $DOCKER_IMAGE "ls; pwd"
+        - docker run $DOCKER_ARGS -v $(pwd):/mantl $DOCKER_IMAGE "python2 docker_setup.py"
 
 script:
   - python2 testing/test-health-checks.py
-  - docker run $DOCKER_ARGS $DOCKER_SECRETS $DOCKER_IMAGE "python2 testing/build-cluster.py"
+  - docker run $DOCKER_ARGS -v $(pwd):/mantl $DOCKER_SECRETS $DOCKER_IMAGE "python2 testing/build-cluster.py"
 
 after_script:
   - terraform destroy --force || true
