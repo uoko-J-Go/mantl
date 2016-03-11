@@ -10,7 +10,7 @@ from shlex import split
 from sys import exit
 from subprocess import call
 
-def link_or_generate_ssh_key():
+def link_or_generate_ssh_keys():
     if 'SSH_KEY' not in os.environ:
         os.environ['SSH_KEY'] = 'id_rsa'
 
@@ -69,7 +69,7 @@ if __name__ == "__main__":
         print('mantl.readthedocs.org for mantl config dir')
         exit(1)
 
-    link_or_generate_ssh_key()
+    link_or_generate_ssh_keys()
     link_ansible_playbook()
     link_terraform_files()
     link_or_generate_security_file()
