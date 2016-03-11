@@ -23,12 +23,13 @@ def link_or_generate_ssh_key():
 
 
 def link_terraform_files():
-    tfs = [os.path.abspath(f) for f in os.listdir(os.environ['MANTL_CONFIG_DIR'])
-            if f.endswith('.tf')]
+    cfg_d = os.environ['MANTL_CONFIG_DIR']
+    tfs = [join(cfg_d, f) for f in os.listdir(cfg_d) if f.endswith('.tf')]
     if len(tfs):
         for tf in tfs:
-            print("Symlinking {} to {}".format(tf, os.path.basename(tf)))
-            symlink(tf, os.path.basename(tf))
+            base = os.path.basename(tf)
+            print("Symlinking {} to {}".format(tf, base))
+            symlink(tf, base)
     else:
         if 'MANTL_PROVIDER' not in os.environ:
             print("mantl.readthedocs.org for provider")
