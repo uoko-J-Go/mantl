@@ -23,7 +23,7 @@ def link_or_generate_ssh_key():
 
 
 def link_terraform_files():
-    tfs = [f for f in os.listdir(os.environ['MANTL_CONFIG_DIR'])
+    tfs = [os.relpath(f) for f in os.listdir(os.environ['MANTL_CONFIG_DIR'])
             if f.endswith('.tf')]
     if len(tfs):
         for tf in tfs:
