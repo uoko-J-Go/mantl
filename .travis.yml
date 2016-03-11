@@ -18,7 +18,7 @@ before_script:
 
 script:
   - python2 testing/test-health-checks.py
-  - docker run $DOCKER_ARGS -v $(pwd)/testing:/local -v $(pwd):/mantl $DOCKER_SECRETS $DOCKER_IMAGE "python2 testing/build-cluster.py"
+  - docker run $DOCKER_ARGS -v $(pwd)/testing:/local -v $(pwd):/mantl $DOCKER_SECRETS $DOCKER_IMAGE "eval $(ssh-agent) && ssh-add; python2 testing/build-cluster.py"
 
 after_script:
   # Just once doesn't always work
