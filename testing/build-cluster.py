@@ -47,6 +47,7 @@ if __name__ == "__main__":
         "~/.ssh/id_rsa"
     ]
     setup = [
+        (["python2", "-c", "import docker_setup; docker_setup.link_or_generate_ssh_keys()"], 1),
         (["terraform", "get"], 1),
         (["terraform", "plan"], 1),
         (["terraform", "apply"], 1),
