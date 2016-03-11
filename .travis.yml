@@ -13,12 +13,12 @@ install: "pip install -r requirements.txt"
 before_script:
         - mv $TERRAFORM_FILE $TERRAFORM_FILE.tf
         - docker pull sehqlr/mantl:testing
-        - docker run $DOCKER_ARGS -v testing:/local -v $(pwd):/mantl $DOCKER_IMAGE "ls /local"
-        - docker run $DOCKER_ARGS -v testing:/local -v $(pwd):/mantl $DOCKER_IMAGE "python2 docker_setup.py"
+        - docker run $DOCKER_ARGS -v $(pwd)/testing:/local -v $(pwd):/mantl $DOCKER_IMAGE "ls /local"
+        - docker run $DOCKER_ARGS -v $(pwd)/testing:/local -v $(pwd):/mantl $DOCKER_IMAGE "python2 docker_setup.py"
 
 script:
   - python2 testing/test-health-checks.py
-  - docker run $DOCKER_ARGS -v testing:/local -v $(pwd):/mantl $DOCKER_SECRETS $DOCKER_IMAGE "python2 testing/build-cluster.py"
+  - docker run $DOCKER_ARGS -v $(pwd)/testing:/local -v $(pwd):/mantl $DOCKER_SECRETS $DOCKER_IMAGE "python2 testing/build-cluster.py"
 
 after_script:
   - terraform destroy --force || true
