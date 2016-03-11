@@ -21,6 +21,10 @@ def link_or_generate_ssh_key():
     print("Symlinking {} to /root/.ssh/id_rsa".format(ssh_key))
     symlink(ssh_key, '/root/.ssh/id_rsa')
 
+    ssh_key += '.pub'
+    print("Symlinking {} to /root/.ssh/id_rsa.pub".format(ssh_key))
+    symlink(ssh_key, '/root/.ssh/id_rsa.pub')
+
 
 def link_terraform_files():
     cfg_d = os.environ['MANTL_CONFIG_DIR']
