@@ -11,7 +11,6 @@ VOLUME /local
 ENV MANTL_CONFIG_DIR /local
 
 VOLUME /root/.ssh
-RUN eval $(ssh-agent)
 
 ENV TERRAFORM_VERSION 0.6.12
 RUN mkdir -p /tmp/terraform/ && \
@@ -23,5 +22,4 @@ RUN mkdir -p /tmp/terraform/ && \
 ENV TERRAFORM_STATE $MANTL_CONFIG_DIR/terraform.tfstate
 
 WORKDIR /mantl
-ENTRYPOINT ["/bin/sh", "-c"]
-CMD ["./docker_launch.sh"]
+ENTRYPOINT ["/usr/bin/ssh-agent", "-t", "3600"]
