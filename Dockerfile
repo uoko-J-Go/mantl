@@ -22,4 +22,4 @@ RUN mkdir -p /tmp/terraform/ && \
 ENV TERRAFORM_STATE $MANTL_CONFIG_DIR/terraform.tfstate
 
 WORKDIR /mantl
-ENTRYPOINT ["/usr/bin/ssh-agent", "-t", "3600"]
+ENTRYPOINT ["/usr/bin/ssh-agent", "-t", "3600", "/bin/sh", "-c"]
