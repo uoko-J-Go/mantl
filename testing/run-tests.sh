@@ -17,6 +17,13 @@ if [[ "${TRAVIS_BRANCH}" != "master" && "${TRAVIS_PULL_REQUEST}" == "false" ]]; 
 	exit 0
 fi
 
+# skip the build if no secrets are defined for the current provider
+if ([[ $TERRAFORM_FILE == "aws.tf" ]] && [[ -z $AWS_SECRET_ACCESS_KEY ]]) || \
+   ([[ $TERRAFORM_FILE == "do.tf" ]] && [[ -z $DIGITALOCEAN_TOKEN ]]) || \
+   ([[ $TERRAFORM_FILE == "gce.tf" ]] && [[ -z $GOOGLE_CREDENTIALS ]]); then
+  exit 0
+fi
+
 ### if the build wasn't skipped, let's set up
 python2 testing/test-health-checks.py
 ssh-keygen -N '' -f ~/.ssh/id_rsa && eval $(ssh-agent) && ssh-add ~/.ssh/id_rsa
