@@ -52,7 +52,7 @@
   filesystem:
     dev: "{{ docker_volume_device }}"
     fstype: "{{ docker_volume_fs_type }}"
-    opts: "{{ docker_volume_fs_opts }}" 
+    opts: "{{ docker_volume_fs_opts }}"
   when: docker_configure_lvm|bool
   tags:
     - disk

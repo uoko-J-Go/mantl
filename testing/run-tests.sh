@@ -25,7 +25,7 @@ if ([[ $TERRAFORM_FILE == "aws.tf" ]] && [[ -z $AWS_SECRET_ACCESS_KEY ]]) || \
 fi
 
 # test for misformatted ansible files
-find . -name "*.yml" -exec ansible-lint {} +
+find . -name "*.yml" -exec ansible-lint -x "ANSIBLE0008" {} +
 
 ### if the build wasn't skipped, let's set up
 python2 testing/test-health-checks.py

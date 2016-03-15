@@ -24,6 +24,7 @@
     - elasticsearch
   tags:
     - elk
+    - skip_ansible_lint
 
 - name: ensure kibana docker image is present
   sudo: yes
