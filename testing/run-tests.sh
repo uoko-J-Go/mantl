@@ -24,6 +24,9 @@ if ([[ $TERRAFORM_FILE == "aws.tf" ]] && [[ -z $AWS_SECRET_ACCESS_KEY ]]) || \
   exit 0
 fi
 
+# test for misformatted ansible files
+find . -name "*.yml" -exec ansible-lint {} +
+
 ### if the build wasn't skipped, let's set up
 python2 testing/test-health-checks.py
 ssh-keygen -N '' -f ~/.ssh/id_rsa && eval "$(ssh-agent)" && ssh-add ~/.ssh/id_rsa
