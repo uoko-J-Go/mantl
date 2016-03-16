@@ -96,14 +96,30 @@ def ansible():
 def ci_build():
     """Kick off a Continuous Integration job"""
     link_or_generate_ssh_keys()
-    call(split("python2 testing/build-cluster.py"))
+
+    commit_range_filter = 'git diff --name-only "$TRAVIS_COMMIT_RANGE" | grep -v -e \'^docs/\' -e \'md$\' -e \'rst$\''
+
+    if len(commit_range) < 1:
+        logging.info("All of the changes I found were in documentation files.")
+        exit(0)
+
+    ci_branch = os.environ['TRAVIS_BRANCH']
+    ci_is_pr = os.environ['TRAVIS_PULL_REQUEST']
+
+    if ci_branch is not 'master' and ci_is_pr is False:
+        logging.info("We don't want to build on pushes to branches that aren't master.")
+        exit(0)
+
+    return call(split("python2 testing/build-cluster.py"))
 
 
 def ci_destroy():
     """Cleanup after ci_build"""
     link_or_generate_ssh_keys()
-    call(split("terraform destroy --force || true"))
-    call(split("terraform destroy --force"))
+    for i in range(2):
+        returncode = call(split("terraform destroy --force"))
+
+    return returncode
 
 
 if __name__ == "__main__":
