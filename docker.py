@@ -8,7 +8,7 @@ import logging
 from os.path import exists, join
 from shlex import split
 from sys import argv, exit
-from subprocess import call
+from subprocess import call, check_output
 
 
 def symlink_force(source, link_name):
@@ -95,10 +95,11 @@ def ansible():
 
 def ci_build():
     """Kick off a Continuous Integration job"""
+    if 'TRAVIS_REPO_SLUG' in os.environ: print(os.environ['TRAVIS_REPO_SLUG'])
     link_or_generate_ssh_keys()
 
     commit_range_filter = 'git diff --name-only "$TRAVIS_COMMIT_RANGE" | grep -v -e \'^docs/\' -e \'md$\' -e \'rst$\''
-    commit_range = subprocess.check_output(commit_range_filter)
+    commit_range = check_output(commit_range_filter)
     if len(commit_range) < 1:
         logging.info("All of the changes I found were in documentation files.")
         exit(0)
