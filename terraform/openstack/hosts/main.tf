@@ -11,13 +11,13 @@ variable edge_count { }
 variable edge_flavor_name { }
 variable image_name { }
 variable keypair_name { }
-variable long_name { default = "microservices-infrastructure" }
+variable long_name { default = "mantl" }
 variable net_id { }
 variable worker_count {}
 variable kube_worker_count { default = "0" }
 variable worker_flavor_name { }
 variable security_groups { default = "default" }
-variable short_name { default = "mi" }
+variable short_name { default = "mantl" }
 variable ssh_user { default = "centos" }
 variable tenant_id { }
 variable tenant_name { }

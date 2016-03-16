@@ -31,6 +31,7 @@ Features
   service discovery with Mesos tasks
 * `marathon-consul <https://github.com/CiscoCloud/marathon-consul>`_ update
   consul k/v with Marathon tasks
+* `ELK Stack <https://www.elastic.co/webinars/introduction-elk-stack>`_
 * Multi-datacenter support
 * High availablity
 * Security
@@ -42,11 +43,11 @@ Contents:
 
    getting_started/index.rst
    components/index.rst
+   addons.rst
    security/index.rst
    upgrading/index.rst
    packer.rst
    changelog.rst
-   roadmap.rst
    faq.rst
    license.rst
 

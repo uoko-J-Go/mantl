@@ -2,7 +2,7 @@
 - name: install leader configuration
   sudo: yes
   yum:
-    name: https://bintray.com/artifact/download/asteris/testing/mesos-master-0.26.0-1.noarch.rpm
+    name: "{{ mesos_master_package }}"
     state: present
   tags:
     - mesos

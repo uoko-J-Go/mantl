@@ -2,7 +2,7 @@
 - name: install follower configuration
   sudo: yes
   yum:
-    name: https://bintray.com/artifact/download/asteris/testing/mesos-agent-0.26.0-1.noarch.rpm
+    name: "{{ mesos_agent_package }}"
     state: present
   tags:
     - mesos

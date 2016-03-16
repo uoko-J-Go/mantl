@@ -45,6 +45,7 @@
     - policycoreutils-python
     - unzip
     - jq
+    - java-1.8.0-openjdk
   tags:
     - bootstrap
 
@@ -88,6 +89,15 @@
   tags:
     - security
     - bootstrap
+
+- name: enable yum repos
+  sudo: yes
+  copy:
+    src: "{{ item }}"
+    dest: "/etc/yum.repos.d/{{ item }}"
+  with_items:
+    - asteris-mantl-rpm.repo
+    - ciscocloud-rpm.repo
 
 - include: users.yml
 - include: ssl.yml
