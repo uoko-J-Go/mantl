@@ -93,6 +93,19 @@ def ansible():
     call(split("ansible-playbook mantl.yml -e @security.yml"))
 
 
+def ci_build():
+    """Kick off a Continuous Integration job"""
+    link_or_generate_ssh_keys()
+    call(split("python2 testing/build-cluster.py"))
+
+
+def ci_destroy():
+    """Cleanup after ci_build"""
+    link_or_generate_ssh_keys()
+    call(split("terraform destroy --force || true"))
+    call(split("terraform destroy --force"))
+
+
 if __name__ == "__main__":
 
     logfmt = "%(levelname)s\t%(asctime)s\t%(message)s"
@@ -114,6 +127,10 @@ if __name__ == "__main__":
             setup()
             terraform()
             ansible()
+        elif argv[1] == 'ci-build':
+            ci_build()
+        elif argv[1] == 'ci-destroy':
+            ci_destroy()
         else:
             logging.critical("Usage: docker.py [CMD]")
             exit(1)
