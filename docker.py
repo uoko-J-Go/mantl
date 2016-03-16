@@ -66,9 +66,8 @@ def link_or_generate_security_file():
     if not exists(security_file):
         logging.info("Generating {} via security-setup".format(security_file))
         call(split('./security-setup --enable=false'))
-        os.rename('security.yml', security_file)
-
-    symlink_force(security_file, 'security.yml')
+    else:
+        symlink_force(security_file, 'security.yml')
 
 
 def setup():
