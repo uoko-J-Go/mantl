@@ -11,20 +11,18 @@ env:
 
 install: "pip install -r requirements.txt"
 
-before_script: 
+before_script:
   - mv $TERRAFORM_FILE $TERRAFORM_FILE.tf
   - docker pull $DOCKER_IMAGE
   - docker run $DOCKER_ARGS -v $(pwd)/testing:/local -v $(pwd):/mantl $DOCKER_IMAGE "python2 docker.py setup"
 
-script: 
+script:
   - python2 testing/test-health-checks.py
   - docker run $DOCKER_ARGS -v $(pwd)/testing:/local -v $(pwd):/mantl $DOCKER_SECRETS $DOCKER_IMAGE "python docker.py ci-build"
 
 after_script:
   # Just once doesn't always work
   - docker run $DOCKER_ARGS -v $(pwd)/testing:/local -v $(pwd):/mantl $DOCKER_SECRETS $DOCKER_IMAGE "python docker.py ci-destroy"
-
-after_success: echo "slack notification here"
 
 sudo: required
 
@@ -35,3 +33,7 @@ addons:
   apt:
     packages:
       - unzip
+
+notifications:
+  slack:
+    secure: eX3VgtKQ48rzKGdXpIZZVYINffI2wbqhqoJFUxHO1Zku6tXzbt0R+r3NVHo37wBID63bkXjYqjZuv+JRUtvf/XO51+QkTqCCZ6iC3lr6IEqRpzxXsmNYf+QPhuN2kvVTSyycHFXdwQLL7sCniFSmEcLdu6xMpobI4PUwi2OvHj4=
