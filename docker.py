@@ -34,7 +34,11 @@ def link_or_generate_ssh_keys():
     symlink_force(ssh_key, '/root/.ssh/id_rsa.pub')
 
 
-def link_terraform_files():
+def link_ci_terraform_file():
+    symlink_force(os.environ['TERRAFORM_FILE'], 'terraform.tf')
+
+
+def link_user_defined_terraform_files():
     """Ensures that provided/chosen terraform files are symlinked"""
 
     # Symlink tf files in the config dir
@@ -73,11 +77,11 @@ def link_or_generate_security_file():
         symlink_force(security_file, 'security.yml')
 
 
-def setup():
+def ci_setup():
     """Run all setup commands, saving files to MANTL_CONFIG_DIR"""
     link_or_generate_ssh_keys()
     link_ansible_playbook()
-    link_terraform_files()
+    link_ci_terraform_files()
     link_or_generate_security_file()
 
 
@@ -164,8 +168,8 @@ if __name__ == "__main__":
 
     #TODO: replace this with either click or pypsi
     if len(argv) > 1:
-        if argv[1] == 'setup':
-            setup()
+        if argv[1] == 'ci-setup':
+            ci_setup()
         elif argv[1] == 'terraform':
             terraform()
         elif argv[1] == 'ansible':

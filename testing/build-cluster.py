@@ -42,8 +42,6 @@ def run_cmds(cmds, fail_sequential=False):
     return to_return
 
 if __name__ == "__main__":
-    symlink(environ['TERRAFORM_FILE'], 'terraform.tf')
-
     ap = [
         "ansible-playbook", "-e", "@security.yml", "--private-key",
         "~/.ssh/id_rsa"
