@@ -126,9 +126,12 @@ def ci_build():
         logging.info("We don't want to build on pushes to branches that aren't master.")
         exit(0)
 
-    # TODO: add in check for forks
-
-    return call(split("python2 testing/build-cluster.py"))
+    # TODO: add in check for forks with TRAVIS_REPO_SLUG
+    if os.environ['TERRAFORM_FILE'] == 'OPENSTACK':
+        logging.critical("SSHing into jump host to test OpenStack is currently being implemented")
+    else:
+        logging.info("Starting cloud provider test")
+        return call(split("python2 testing/build-cluster.py"))
 
 
 def ci_destroy():
