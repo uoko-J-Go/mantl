@@ -28,11 +28,6 @@ sudo: required
 services:
   - docker
 
-sudo: required
-
-services:
-  - docker
-
 addons:
   apt:
     packages:
