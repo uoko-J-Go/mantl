@@ -98,10 +98,8 @@ def ci_build():
     link_or_generate_ssh_keys()
 
     # Filter out commits that are documentation changes.
-    if 'TRAVIS_COMMIT_RANGE' in os.environ:
-        commit_range_cmd = 'git diff --name-only {}'.format(os.environ['TRAVIS_COMMIT_RANGE'])
-    else:
-        commit_range_cmd = 'git diff --name-only {}'.format(os.environ['TRAVIS_COMMIT'])
+    logging.info(os.environ['TRAVIS_REPO_SLUG'])
+    commit_range_cmd = 'git diff --name-only {}'.format(os.environ['TRAVIS_COMMIT_RANGE'])
 
     commit_range_str = str(check_output(split(commit_range_cmd)))
 
