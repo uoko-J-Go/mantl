@@ -98,7 +98,7 @@ def ci_build():
     link_or_generate_ssh_keys()
 
     # Filter out commits that are documentation changes.
-    commit_range_cmd = 'git diff --name-only "$TRAVIS_COMMIT_RANGE"'
+    commit_range_cmd = 'git diff --name-only {}'.format(os.environ['TRAVIS_COMMIT_RANGE'])
     commit_range_str = str(check_output(split(commit_range_cmd)))
 
     commit_range = []
@@ -114,7 +114,7 @@ def ci_build():
             commit_range.append(commit)
 
     if len(commit_range) < 1:
-        logging.info("All of the changes I found were in documentation files.")
+        logging.info("All of the changes I found were in documentation files. Skipping build")
         exit(0)
 
     # Filter out commits that are pushes to non-master branches
