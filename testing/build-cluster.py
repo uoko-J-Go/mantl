@@ -2,7 +2,7 @@
 from __future__ import print_function
 import subprocess
 from sys import exit
-from os import devnull
+from os import devnull, environ, symlink
 from time import sleep
 
 def run_cmd(cmd, attempts=1):
@@ -42,6 +42,8 @@ def run_cmds(cmds, fail_sequential=False):
     return to_return
 
 if __name__ == "__main__":
+    symlink(environ['TERRAFORM_FILE'], 'terraform.tf')
+
     ap = [
         "ansible-playbook", "-e", "@security.yml", "--private-key",
         "~/.ssh/id_rsa"

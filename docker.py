@@ -37,26 +37,21 @@ def link_or_generate_ssh_keys():
 def link_terraform_files():
     """Ensures that provided/chosen terraform files are symlinked"""
 
-    # TERRAFORM_FILE overrides all other files. This is for CI
-    if 'TERRAFORM_FILE' in os.environ:
-        symlink_force(os.environ['TERRAFORM_FILE'], 'terraform.tf')
-
+    # Symlink tf files in the config dir
+    cfg_d = os.environ['MANTL_CONFIG_DIR']
+    tfs = [join(cfg_d, f) for f in os.listdir(cfg_d) if f.endswith('.tf')]
+    if len(tfs):
+        for tf in tfs:
+            base = os.path.basename(tf)
+            symlink_force(tf, base)
     else:
-        # Symlink tf files in the config dir
-        cfg_d = os.environ['MANTL_CONFIG_DIR']
-        tfs = [join(cfg_d, f) for f in os.listdir(cfg_d) if f.endswith('.tf')]
-        if len(tfs):
-            for tf in tfs:
-                base = os.path.basename(tf)
-                symlink_force(tf, base)
-        else:
-            # Symlink tf files based on provider
-            if 'MANTL_PROVIDER' not in os.environ:
-                logging.critical("mantl.readthedocs.org for provider")
-                exit(1)
-            tf = 'terraform/{}.sample.tf'.format(os.environ['MANTL_PROVIDER'])
+        # Symlink tf files based on provider
+        if 'MANTL_PROVIDER' not in os.environ:
+            logging.critical("mantl.readthedocs.org for provider")
+            exit(1)
+        tf = 'terraform/{}.sample.tf'.format(os.environ['MANTL_PROVIDER'])
 
-            symlink_force(tf, 'mantl.tf')
+        symlink_force(tf, 'mantl.tf')
 
 
 def link_ansible_playbook():
