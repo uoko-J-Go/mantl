@@ -13,7 +13,6 @@ env:
 install: "pip install -r requirements.txt"
 
 before_script:
-  - mv $TERRAFORM_FILE $TERRAFORM_FILE.tf
   - docker pull $DOCKER_IMAGE
   - docker run $DOCKER_ARGS -v $(pwd)/testing:/local -v $(pwd):/mantl $DOCKER_IMAGE "python2 docker.py setup"
 
