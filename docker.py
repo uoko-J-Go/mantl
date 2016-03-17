@@ -129,9 +129,16 @@ def ci_build():
     # TODO: add in check for forks with TRAVIS_REPO_SLUG
     if os.environ['TERRAFORM_FILE'] == 'OPENSTACK':
         logging.critical("SSHing into jump host to test OpenStack is currently being implemented")
+
+        ssh_cmd = 'ssh -i /root/.ssh/openstack shatfiel@{} "echo testing 123"'.format(os.environ['OS_IP'])
+        with open('/root/.ssh/openstack', 'w') as key:
+            key.write(os.environ['OS_KEY'])
+
+        exit(call(split(ssh_cmd)))
+
     else:
         logging.info("Starting cloud provider test")
-        return call(split("python2 testing/build-cluster.py"))
+        exit(call(split("python2 testing/build-cluster.py")))
 
 
 def ci_destroy():
@@ -140,7 +147,7 @@ def ci_destroy():
     for i in range(2):
         returncode = call(split("terraform destroy --force"))
 
-    return returncode
+    exit(returncode)
 
 
 if __name__ == "__main__":
