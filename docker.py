@@ -103,6 +103,7 @@ def ansible():
 def ci_build():
     """Kick off a Continuous Integration job"""
     link_or_generate_ssh_keys()
+    link_ci_terraform_file()
 
     # Filter out commits that are documentation changes.
     logging.info(os.environ['TRAVIS_REPO_SLUG'])
@@ -151,6 +152,7 @@ def ci_build():
 def ci_destroy():
     """Cleanup after ci_build"""
     link_or_generate_ssh_keys()
+    link_ci_terraform_file()
     for i in range(2):
         returncode = call(split("terraform destroy --force"))
 
