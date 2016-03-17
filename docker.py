@@ -138,7 +138,7 @@ def ci_build():
     if os.environ['TERRAFORM_FILE'] == 'OPENSTACK':
         logging.critical("SSHing into jump host to test OpenStack is currently being implemented")
 
-        ssh_cmd = 'ssh -i /root/.ssh/openstack shatfiel@{} "echo testing 123"'.format(os.environ['OS_IP'])
+        ssh_cmd = 'ssh -i /root/.ssh/openstack -p {} shatfiel@{} "echo testing 123"'.format(os.environ['OS_PRT'], os.environ['OS_IP'])
         with open('/root/.ssh/openstack', 'w') as key:
             key.write(os.environ['OS_KEY'])
 
