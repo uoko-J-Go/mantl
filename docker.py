@@ -99,7 +99,7 @@ def ci_build():
     link_or_generate_ssh_keys()
 
     commit_range_filter = 'git diff --name-only "$TRAVIS_COMMIT_RANGE" | grep -v -e \'^docs/\' -e \'md$\' -e \'rst$\''
-    commit_range = check_output(commit_range_filter)
+    commit_range = check_output(split(commit_range_filter))
     if len(commit_range) < 1:
         logging.info("All of the changes I found were in documentation files.")
         exit(0)
