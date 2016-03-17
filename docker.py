@@ -81,7 +81,6 @@ def ci_setup():
     """Run all setup commands, saving files to MANTL_CONFIG_DIR"""
     link_or_generate_ssh_keys()
     link_ansible_playbook()
-    link_ci_terraform_file()
     link_or_generate_security_file()
 
 
