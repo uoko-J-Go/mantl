@@ -158,8 +158,13 @@ def ci_destroy():
     """Cleanup after ci_build"""
     link_or_generate_ssh_keys()
     link_ci_terraform_file()
+
+    destroy_cmd = "terraform destroy --force"
+    if os.environ['TERRAFORM_FILE'] == 'OPENSTACK': 
+        destroy_cmd = "ssh -i {} -p {} -o BatchMode=yes -o StrictHostKeyChecking=no travis@{} '{}'".format('/local/ci', os.environ['OS_PRT'], os.environ['OS_IP'], destroy_cmd)
+
     for i in range(2):
-        returncode = call(split("terraform destroy --force"))
+        returncode = call(split(destroy_cmd))
 
     exit(returncode)
 
