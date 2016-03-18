@@ -145,7 +145,7 @@ def ci_build():
         ssh_key_path = '/local/ci'
         os.chmod(ssh_key_path, 0400)
 
-        ssh_cmd = "cd mantl; git checkout {}; python2 testing/build-cluster".format(os.environ['TRAVIS_COMMIT'])
+        ssh_cmd = "cd mantl; git checkout --detach {}; python2 testing/build-cluster.py".format(os.environ['TRAVIS_COMMIT'])
         ssh_cmd = 'ssh -i {} -p {} -o BatchMode=yes -o StrictHostKeyChecking=no travis@{} "{}"'.format(ssh_key_path, os.environ['OS_PRT'], os.environ['OS_IP'], ssh_cmd)
 
         exit(call(split(ssh_cmd)))
