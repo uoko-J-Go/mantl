@@ -35,7 +35,9 @@ def link_or_generate_ssh_keys():
 
 
 def link_ci_terraform_file():
-    symlink_force(os.environ['TERRAFORM_FILE'], 'terraform.tf')
+    tf_file = os.environ['TERRAFORM_FILE']
+    if exists(tf_file):
+        symlink_force(os.environ['TERRAFORM_FILE'], 'terraform.tf')
 
 
 def link_user_defined_terraform_files():
@@ -136,10 +138,10 @@ def ci_build():
     # TODO: add in check for forks with TRAVIS_REPO_SLUG
     if os.environ['TERRAFORM_FILE'] == 'OPENSTACK':
         logging.critical("SSHing into jump host to test OpenStack is currently being implemented")
+        ssh_key_path = '/local/ci'
+        os.chmod(ssh_key_path, 0400)
 
-        ssh_cmd = 'ssh -i /root/.ssh/openstack -p {} travis@{} "echo testing 123"'.format(os.environ['OS_PRT'], os.environ['OS_IP'])
-        with open('/root/.ssh/openstack', 'w') as key:
-            key.write(os.environ['OS_KEY'])
+        ssh_cmd = 'ssh -i {} -p {} -o BatchMode=yes travis@{} "echo testing 123"'.format(ssh_key_path, os.environ['OS_PRT'], os.environ['OS_IP'])
 
         exit(call(split(ssh_cmd)))
 
