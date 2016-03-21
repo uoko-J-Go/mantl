@@ -195,6 +195,7 @@ rm -fr {commit};
                 ssh_port=os.environ['OS_PRT'],
                 ssh_ip=os.environ['OS_IP'],
                 commit=os.environ['TRAVIS_COMMIT'])
+        destroy_cmd = " ".join(destroy_cmd.splitlines())
 
     for i in range(2):
         returncode = call(split(destroy_cmd))
