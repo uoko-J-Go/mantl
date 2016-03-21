@@ -163,7 +163,7 @@ python2 testing/build-cluster.py
                 keypath='/local/ci', 
                 ssh_port=os.environ['OS_PRT'], 
                 ssh_ip=os.environ['OS_IP'])
-        ssh_cmd = "".join(ssh_cmd.splitlines())
+        ssh_cmd = " ".join(ssh_cmd.splitlines())
 
         exit(call(split(ssh_cmd)))
 
