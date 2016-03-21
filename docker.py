@@ -150,14 +150,12 @@ def ci_build():
         ssh_cmd = '''
 ssh -i {keypath} -p {ssh_port} 
 -o BatchMode=yes -o StrictHostKeyChecking=no
-travis@{ssh_ip} /bin/sh -c 
-"
+travis@{ssh_ip} /bin/sh -c "
 cd mantl;
 git clone https://github.com/CiscoCloud/mantl.git {commit};
 cd {commit}; 
 git checkout {commit}; 
-python2 testing/build-cluster.py
-"
+python2 testing/build-cluster.py"
         '''
         ssh_cmd = ssh_cmd.format(commit=os.environ['TRAVIS_COMMIT'], 
                 keypath='/local/ci', 
@@ -182,13 +180,11 @@ def ci_destroy():
         destroy_cmd = '''
 ssh -i {keypath} -p {ssh_port} 
 -o BatchMode=yes -o StrictHostKeyChecking=no 
-travis@{ssh_ip} /bin/sh -c 
-"
+travis@{ssh_ip} /bin/sh -c "
 cd mantl/{commit}; 
 {0}; 
 cd ..; 
-rm -fr {commit};
-"
+rm -fr {commit};"
         '''
         destroy_cmd = destroy_cmd.format(destroy_cmd, 
                 keypath='/local/ci', 
