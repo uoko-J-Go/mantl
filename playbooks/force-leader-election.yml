@@ -1,6 +1,34 @@
 ---
+# This playbook forces Consul to elect a new leader. Uses a rolling restart.
+# See: https://www.consul.io/docs/guides/outage.html
+
 - hosts: role=control
+  serial: 1
+  gather_facts: no
   tasks:
-  - name: Remove Consul's raft peers database
+  - name: enable consul maintenance mode
+    command: consul maint -enable -reason "{{ lookup('env', 'USER') }} reset consul peers"
+
+  - name: stop consul
     become: yes
-    shell: rm -f /var/lib/consul/raft/peers.json
+    service:
+      name: consul
+      state: stopped
+
+  - name: repopulate consul's peers database
+    copy:
+    dest: /var/lib/consul/raft/peers.json
+    content: "[{% for host in groups[consul_servers_group] | intersect(groups[consul_dc_group]) %}\"{{ hostvars[host].private_ipv4 }}:8300\"{% if not loop.last %}, {% endif %}{% endfor %}]"
+
+  - name: start consul
+    become: yes
+    service:
+      name: consul
+      state: started
+
+  - name: wait for consul to listen
+    wait_for:
+      port: 8500
+
+  - name: disable consul maintenance mode
+    command: consul maint -disable
