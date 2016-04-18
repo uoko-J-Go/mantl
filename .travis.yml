@@ -9,6 +9,7 @@ addons:
       - unzip
       - virtualbox
       - vagrant
+sudo: required
 
 notifications:
   slack:
