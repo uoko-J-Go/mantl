@@ -9,7 +9,7 @@ import sys
 def check_travis_repo_slug():
     if 'encrypted_6a9d32f3e0bd_key' not in os.environ:
         logging.warning("Decryption disabled. Setting MANTL_CI_FORK_CHECK to 1")
-        os.environ['MANTL_CI_FORK_CHECK'] = "1"
+        print("1")
     else:
         logging.info("Decrypting OS ssh key")
         cmd = "openssl aes-256-cbc -K {key} -iv {iv} -in ci.enc -out testing/ci -d".format(

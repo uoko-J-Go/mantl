@@ -35,4 +35,4 @@ notifications:
   slack:
     secure: eX3VgtKQ48rzKGdXpIZZVYINffI2wbqhqoJFUxHO1Zku6tXzbt0R+r3NVHo37wBID63bkXjYqjZuv+JRUtvf/XO51+QkTqCCZ6iC3lr6IEqRpzxXsmNYf+QPhuN2kvVTSyycHFXdwQLL7sCniFSmEcLdu6xMpobI4PUwi2OvHj4=
 before_install:
-  - testing/travis-fork-check.py
+  - MANTL_CI_FORK_CHECK=$(python testing/travis-fork-check.py)
