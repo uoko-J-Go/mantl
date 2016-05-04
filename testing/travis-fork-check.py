@@ -18,4 +18,5 @@ def check_travis_repo_slug():
         sys.exit(subprocess.call(shlex.split(cmd)))
 
 if __name__ == "__main__":
+    logging.basicConfig(level=logging.INFO)
     check_travis_repo_slug()
