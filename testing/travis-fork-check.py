@@ -16,3 +16,6 @@ def check_travis_repo_slug():
                 key=os.environ['encrypted_6a9d32f3e0bd_key'],
                 iv=os.environ['encrypted_6a9d32f3e0bd_iv'])
         sys.exit(subprocess.call(shelx.split(cmd)))
+
+if __name__ == "__main__":
+    check_travis_repo_slug()
