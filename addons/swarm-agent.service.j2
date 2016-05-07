@@ -1,0 +1,21 @@
+[Unit]
+Description=docker swarm
+After=docker.service
+After=consul.service
+Requires=docker.service
+Requires=consul.service
+
+[Service]
+Restart=on-failure
+RestartSec=20
+
+ExecStart=/usr/bin/docker run --rm \
+    --name swarm-agent \
+    swarm join \
+    --advertise "{{ private_ipv4 }}:{{ swarm_agent_port }}" \
+    consul://127.0.0.1:8500/nodes
+
+ExecStop=/usr/bin/docker kill swarm-agent
+
+[Install]
+WantedBy=multi-user.target

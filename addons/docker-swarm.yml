@@ -1,0 +1,68 @@
+# Set up Docker Swarm on a Mesos cluster. Swarm runs independently of Mesos &
+# Kubernetes, and manages its own scheduling. Run this playbook after running
+# the core playbook (sample.yml).
+
+# CHECK SECURITY - when customizing you should leave this in. If you take it out
+# and forget to specify security.yml, security could be turned off on components
+# in your cluster!
+- include: "{{ playbook_dir }}/../playbooks/check-requirements.yml"
+
+- hosts: all
+  # Open the Docker API to the network. Please note this is insecure w/o TLS.
+  vars:
+    swarm_agent_port: 2375
+    docker_network_options:
+      - "-H unix:///var/run/docker.sock"
+      - "-H tcp://0.0.0.0:{{ swarm_agent_port }}"
+  roles:
+    - docker
+
+- hosts: role=control
+  vars:
+    swarm_manager_port: 4000
+  tasks:
+    - name: create systemd service for managing swarm leaders
+      sudo: yes
+      template:
+        dest: /usr/lib/systemd/system/swarm-leader.service
+        src: "{{ playbook_dir }}/swarm-leader.service.j2"
+
+    - name: enable and start one swarm-leader
+      sudo: yes
+      run_once: yes
+      service:
+        name: swarm-leader
+        enabled: yes
+        state: started
+
+    - name: wait for that swarm-leader to elect itself
+      failed_when: false
+      wait_for:
+        path: /some/nonsense/path
+        delay: 9
+        timeout: 10
+
+    - name: enable and start the rest of the swarm-leaders
+      sudo: yes
+      run_once: yes
+      service:
+        name: swarm-leader
+        enabled: yes
+        state: started
+
+- hosts: role=worker
+  vars:
+    swarm_agent_port: 2375
+  tasks:
+    - name: create systemd service for managing swarm agents
+      sudo: yes
+      template:
+        dest: /usr/lib/systemd/system/swarm-agent.service
+        src: "{{ playbook_dir }}/swarm-agent.service.j2"
+
+    - name: enable and start swarm-agent
+      sudo: yes
+      service:
+        name: swarm-agent
+        enabled: yes
+        state: started
