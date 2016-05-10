@@ -62,6 +62,8 @@ distributed services
   collection and analysis
      -  [Logstash](https://github.com/elastic/logstash) for log forwarding
 * [GlusterFS](http://www.gluster.org/) for container volume storage
+* [Docker Swarm](https://www.docker.com/products/docker-swarm) for clustering
+  a group of Docker engines.
 * [etcd](https://github.com/coreos/etcd) distributed key-value store for Calico
 * [Calico](http://www.projectcalico.org) a new kind of virtual network
 * [collectd](https://collectd.org/) for metrics collection

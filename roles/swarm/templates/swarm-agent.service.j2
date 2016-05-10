@@ -9,14 +9,15 @@ Requires=consul.service
 Restart=on-failure
 RestartSec=20
 
+ExecStartPre=-/usr/bin/docker rm -f swarm-agent
 ExecStart=/usr/bin/docker run --rm \
     --name swarm-agent \
     swarm join \
     --advertise "{{ private_ipv4 }}:{{ swarm_agent_port }}" \
     {% if do_consul_ssl -%}
-    --discovery-opt kv.cacertfile=/etc/pki/ca-trust/source/anchors/cacert.pem \
-    --discovery-opt kv.certfile=/etc/pki/tls/certs/host.cert \
-    --discovery-opt kv.keyfile=/etc/pki/tls/private/host.key
+    {% for discovery_opt in swarm_tls_discovery_options -%}
+    --discovery-opt {{ discovery_opt }} {% if not loop.last %}\{% endif %}
+    {%- endfor %}
     {%- endif %}
     consul://consul.service.consul:8500/nodes
 

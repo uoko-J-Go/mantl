@@ -4,4 +4,4 @@ dependencies:
   # Open the Docker API to the network. Please note this is insecure w/o TLS.
   # TODO: TLS
   - role: docker
-    docker_network_options: "{{ swarm_docker_network_options }}"
+    docker_network_options: "{{ swarm_docker_daemon_options }}"
