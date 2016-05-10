@@ -6,24 +6,30 @@ PartOf=docker.service
 Requires=consul.service
 
 [Service]
-Restart=on-failure
+Restart=always
 RestartSec=20
+TimeoutStartSec=20m
 
 ExecStartPre=-/usr/bin/docker rm -f swarm-leader
-ExecStart=/usr/bin/docker run --rm \
+ExecStartPre=-/usr/bin/docker pull {{ swarm_image }}
+ExecStart=/usr/bin/docker run
+    --rm \
+    --publish={{ swarm_manager_port }}:{{ swarm_manager_port }}\
     --name swarm-leader \
-    -p "{{ swarm_manager_port }}:{{ swarm_manager_port }}"\
-    swarm manage --replication \
+    {{ swarm_image }}
+    manage --replication \
     -H ":{{ swarm_manager_port }}" \
     --advertise "{{ private_ipv4 }}:{{ swarm_manager_port }}" \
     {% if do_consul_ssl -%}
     {% for discovery_opt in swarm_tls_discovery_options -%}
-    --discovery-opt {{ discovery_opt }} {% if not loop.last %}\{% endif %}
+    --discovery-opt {{ discovery_opt }}
     {%- endfor %}
     {%- endif %}
     consul://consul.service.consul:8500/nodes
 
-ExecStop=/usr/bin/docker kill swarm-leader
+ExecStop=/bin/bash -c " \
+    /usr/bin/docker kill swarm-leader && \
+    /usr/bin/docker rm -f swarm-leader"
 
 [Install]
 WantedBy=multi-user.target
