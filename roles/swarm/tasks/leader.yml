@@ -7,24 +7,8 @@
   notify:
     - reload systemd
 
-- name: enable and start one swarm-leader
+- name: enable and start the swarm-leaders
   sudo: yes
-  run_once: yes
-  service:
-    name: swarm-leader
-    enabled: yes
-    state: restarted
-
-- name: wait for that swarm-leader to elect itself
-  failed_when: false
-  wait_for:
-    path: /some/nonsense/path
-    delay: 9
-    timeout: 10
-
-- name: enable and start the rest of the swarm-leaders
-  sudo: yes
-  run_once: yes
   service:
     name: swarm-leader
     enabled: yes

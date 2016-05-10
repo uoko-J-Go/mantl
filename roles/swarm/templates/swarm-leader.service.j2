@@ -12,19 +12,22 @@ TimeoutStartSec=20m
 
 ExecStartPre=-/usr/bin/docker rm -f swarm-leader
 ExecStartPre=-/usr/bin/docker pull {{ swarm_image }}
-ExecStart=/usr/bin/docker run
+ExecStart=/usr/bin/docker run \
     --rm \
+    --name=swarm-leader \
+    --volume={{ swarm_ca_cert.host }}:{{ swarm_ca_cert.container }}:ro \
+    --volume={{ swarm_host_cert.host }}:{{ swarm_host_cert.container }}:ro \
+    --volume={{ swarm_key_file.host }}:{{ swarm_key_file.container }}:ro \
     --publish={{ swarm_manager_port }}:{{ swarm_manager_port }}\
-    --name swarm-leader \
-    {{ swarm_image }}
-    manage --replication \
-    -H ":{{ swarm_manager_port }}" \
+    {{ swarm_image }} manage \
     --advertise "{{ private_ipv4 }}:{{ swarm_manager_port }}" \
     {% if do_consul_ssl -%}
-    {% for discovery_opt in swarm_tls_discovery_options -%}
-    --discovery-opt {{ discovery_opt }}
-    {%- endfor %}
-    {%- endif %}
+    --discovery-opt "kv.cacertfile={{ swarm_ca_cert.container }}" \
+    --discovery-opt "kv.certfile={{ swarm_host_cert.container }}" \
+    --discovery-opt "kv.keyfile={{ swarm_key_file.container }}" \
+    {% endif -%}
+    --replication \
+    -H ":{{ swarm_manager_port }}" \
     consul://consul.service.consul:8500/nodes
 
 ExecStop=/bin/bash -c " \

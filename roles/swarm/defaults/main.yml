@@ -4,21 +4,24 @@ swarm_manager_port: 4000
 swarm_agent_port: 2375
 
 swarm_tls: true
-swarm_ca_cert: /etc/pki/ca-trust/source/anchors/cacert.pem
-swarm_host_cert: /etc/pki/tls/certs/host.cert
-swarm_key_file: /etc/pki/tls/private/host.key
 
-# These are the same certificates as Consul, deployed by security-setup
-swarm_tls_discovery_options:
-  - "kv.cacertfile={{ swarm_ca_cert }}"
-  - "kv.certfile={{ swarm_host_cert }}"
-  - "kv.keyfile={{ swarm_key_file }}"
+swarm_ca_cert:
+  host: /etc/pki/ca-trust/source/anchors/cacert.pem
+  container: /etc/pki/cacert.pem
+
+swarm_host_cert:
+  host: /etc/pki/tls/certs/host.cert
+  container: /etc/pki/host.cert
+
+swarm_key_file:
+  host: /etc/pki/tls/private/host.key
+  container: /etc/pki/host.key
 
 swarm_docker_daemon_options:
   - "-H unix:///var/run/docker.sock"
   - "-H tcp://0.0.0.0:{{ swarm_agent_port }}"
 
   - "{% if swarm_tls -%}--tlsverify{%- endif %}"
-  - "{% if swarm_tls -%}--tlscacert={{ swarm_ca_cert }}{%- endif %}"
-  - "{% if swarm_tls -%}--tlscert={{ swarm_host_cert }}{%- endif %}"
-  - "{% if swarm_tls -%}--tlskey={{ swarm_key_file }}{%- endif %}"
+  - "{% if swarm_tls -%}--tlscacert={{ swarm_ca_cert.host }}{%- endif %}"
+  - "{% if swarm_tls -%}--tlscert={{ swarm_host_cert.host }}{%- endif %}"
+  - "{% if swarm_tls -%}--tlskey={{ swarm_key_file.host }}{%- endif %}"
