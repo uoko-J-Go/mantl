@@ -1,0 +1,6 @@
+---
+swarm_manager_port: 4000
+swarm_agent_port: 2375
+swarm_docker_network_options:
+  - "-H unix:///var/run/docker.sock"
+  - "-H tcp://0.0.0.0:{{ swarm_agent_port }}"

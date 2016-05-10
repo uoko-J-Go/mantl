@@ -1,0 +1,6 @@
+---
+- include: leader.yml
+  when: swarm_role == "control"
+
+- include: agent.yml
+  when: swarm_role == "worker"

@@ -1,21 +1,27 @@
 [Unit]
-Description=docker swarm
+Description=docker swarm (leader)
 After=docker.service
 After=consul.service
-Requires=docker.service
+PartOf=docker.service
 Requires=consul.service
 
 [Service]
 Restart=on-failure
 RestartSec=20
 
+ExecStartPre=docker rm swarm-leader
 ExecStart=/usr/bin/docker run --rm \
     --name swarm-leader \
     -p "{{ swarm_manager_port }}:{{ swarm_manager_port }}"\
     swarm manage --replication \
     -H ":{{ swarm_manager_port }}" \
     --advertise "{{ private_ipv4 }}:{{ swarm_manager_port }}" \
-    consul://127.0.0.1:8500/nodes
+    {% if do_consul_ssl -%}
+    --discovery-opt kv.cacertfile=/etc/pki/ca-trust/source/anchors/cacert.pem \
+    --discovery-opt kv.certfile=/etc/pki/tls/certs/host.cert \
+    --discovery-opt kv.keyfile=/etc/pki/tls/private/host.key
+    {%- endif %}
+    consul://consul.service.consul:8500/nodes
 
 ExecStop=/usr/bin/docker kill swarm-leader
 
