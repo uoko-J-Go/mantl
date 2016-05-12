@@ -1,0 +1,39 @@
+---
+- name: install generate-certificate
+  sudo: yes
+  yum:
+    name: generate-certificate-0.0.1
+    state: present
+
+- name: create TLS certificate destination directory
+  sudo: yes
+  file:
+    state: directory
+    path: "{{ cert_options['destination'] }}"
+    owner: root
+    group: root
+    mode: 755
+
+- name: copy CA private key
+  sudo: yes
+  copy:
+    # TODO: this will only work for addons. How can this also work for sample.yml?
+    src: "{{ playbook_dir }}/../ssl/private/cakey.pem"
+    dest: /etc/pki/CA/private/cakey.pem
+
+- name: symlink CA certificate
+  sudo: yes
+  file:
+    state: link
+    src: /etc/pki/CA/ca.cert
+    dest: /etc/pki/CA/cacert.pem
+
+- name: generate per-host certificate signing requests
+  sudo: yes
+  command: >
+    generate-certificate
+    {%- for option, value in cert_options.iteritems() -%}
+    {% if value != "" %} --{{ option }} "{{ value }}" {% endif %}
+    {%- endfor %}
+  args:
+    creates: "{{ cert_options['destination'] }}/{{ cert_options['prefix'] }}.key"

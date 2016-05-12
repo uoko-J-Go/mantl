@@ -1,0 +1,14 @@
+---
+# Options passed to generate-certificate
+cert_options:
+  country: ""      # Default: US
+  state: ""        # Default: New York
+  locality: ""     # Default: Anytown
+  organization: "" # Default: Example Company Inc
+  unit: ""         # Default: Operations
+  email: ""        # Default: operations@example.com
+  dns: ""          # Default: ""
+  ip: "{{ [ public_ipv4, private_ipv4, ansible_ssh_host ] | unique | join(' ') }}"
+  location: "{{ ansible_hostname }}" # Openssl's "CA"
+  destination: /etc/pki/mantl-extra
+  prefix: ""

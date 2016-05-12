@@ -15,16 +15,25 @@ ExecStartPre=-/usr/bin/docker pull {{ swarm_image }}
 ExecStart=/usr/bin/docker run \
     --rm \
     --name=swarm-leader \
-    --volume={{ swarm_ca_cert.host }}:{{ swarm_ca_cert.container }}:ro \
-    --volume={{ swarm_host_cert.host }}:{{ swarm_host_cert.container }}:ro \
-    --volume={{ swarm_key_file.host }}:{{ swarm_key_file.container }}:ro \
+    --volume={{ consul_ca_cert }}:{{ consul_ca_cert }}:ro \
+    --volume={{ consul_cert }}:{{ consul_cert }}:ro \
+    --volume={{ consul_key }}:{{ consul_key }}:ro \
+    --volume={{ swarm_ca_cert }}:{{ swarm_ca_cert }}:ro \
+    --volume={{ swarm_cert }}:{{ swarm_cert }}:ro \
+    --volume={{ swarm_key }}:{{ swarm_key }}:ro \
     --publish={{ swarm_manager_port }}:{{ swarm_manager_port }}\
     {{ swarm_image }} manage \
     --advertise "{{ private_ipv4 }}:{{ swarm_manager_port }}" \
+    {% if swarm_tls -%}
+    --tlsverify \
+    --tlscacert={{ swarm_ca_cert }} \
+    --tlscert={{ swarm_cert }} \
+    --tlskey={{ swarm_key }} \
+    {% endif -%}
     {% if do_consul_ssl -%}
-    --discovery-opt "kv.cacertfile={{ swarm_ca_cert.container }}" \
-    --discovery-opt "kv.certfile={{ swarm_host_cert.container }}" \
-    --discovery-opt "kv.keyfile={{ swarm_key_file.container }}" \
+    --discovery-opt "kv.cacertfile={{ consul_ca_cert }}" \
+    --discovery-opt "kv.certfile={{ consul_cert }}" \
+    --discovery-opt "kv.keyfile={{ consul_key }}" \
     {% endif -%}
     --replication \
     -H ":{{ swarm_manager_port }}" \
