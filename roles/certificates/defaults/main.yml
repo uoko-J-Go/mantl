@@ -1,4 +1,7 @@
 ---
+# Useful for debugging purposes only.
+allow_duplicate_certificates: true
+
 # Options passed to generate-certificate
 cert_options:
   country: ""      # Default: US
@@ -9,6 +12,6 @@ cert_options:
   email: ""        # Default: operations@example.com
   dns: ""          # Default: ""
   ip: "{{ [ public_ipv4, private_ipv4, ansible_ssh_host ] | unique | join(' ') }}"
-  location: "{{ ansible_hostname }}" # Openssl's "CA"
+  location: "{{ ansible_hostname }}" # Openssl's "CN" ("Common Name")
   destination: /etc/pki/mantl-extra
   prefix: ""

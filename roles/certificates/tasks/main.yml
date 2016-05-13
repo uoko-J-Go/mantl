@@ -5,6 +5,19 @@
     name: generate-certificate-0.0.1
     state: present
 
+# TODO: remove me
+- name: delete old certs
+  sudo: yes
+  file:
+    path: /etc/pki/swarm/
+    state: absent
+  when: allow_duplicate_certificates
+
+# TODO: remove me
+- name: allow duplicate certificate generation
+  sudo: yes
+  command: sudo sed -i 's/#unique_subject/unique_subject/g' /etc/pki/CA/openssl-req.cnf
+
 - name: create TLS certificate destination directory
   sudo: yes
   file:
@@ -37,3 +50,10 @@
     {%- endfor %}
   args:
     creates: "{{ cert_options['destination'] }}/{{ cert_options['prefix'] }}.key"
+
+- name: verify certificate integrity
+  sudo: yes
+  command: >
+    openssl verify -CAfile /etc/pki/CA/ca.cert
+    -in "{{ cert_options['destination'] }}/
+    {{- cert_options['prefix'] }}{% if cert_options['prefix'] != "" %}.{% endif %}cert"
